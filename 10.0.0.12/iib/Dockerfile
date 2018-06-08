@@ -7,11 +7,11 @@
 
 FROM ubuntu:16.04
 
-MAINTAINER ashish.nema@nl.abnamro.com
+LABEL maintainer "Ashish Nema <ashish.nema@nl.abnamro.com>"
 
 LABEL "ProductID"="447aefb5fd1342d5b893f3934dfded73" \
-      "ProductName"="IBM Integration Bus" \
-      "ProductVersion"="10.0.0.12"
+    "ProductName"="IBM Integration Bus" \
+    "ProductVersion"="10.0.0.12"
 
 # Install curl
 RUN apt-get update && \
@@ -35,7 +35,7 @@ RUN echo "IIB_10:" > /etc/debian_chroot  && \
 
 # Create user to run as
 RUN useradd --create-home --home-dir /home/iibuser -G mqbrkrs,sudo iibuser && \
-    sed -e 's/^%sudo    .*/%sudo        ALL=NOPASSWD:ALL/g' -i /etc/sudoers
+    sed -e 's/^%sudo	.*/%sudo	ALL=NOPASSWD:ALL/g' -i /etc/sudoers
 
 # Increase security
 RUN sed -i 's/sha512/sha512 minlen=8/'  /etc/pam.d/common-password && \
