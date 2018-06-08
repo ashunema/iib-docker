@@ -32,7 +32,6 @@ RUN echo "IIB_10:" > /etc/debian_chroot  && \
     chmod +x /tmp/kernel_settings.sh;sync && \
     /tmp/kernel_settings.sh
 
-
 # Create user to run as
 RUN useradd --create-home --home-dir /home/iibuser -G mqbrkrs,sudo iibuser && \
     sed -e 's/^%sudo	.*/%sudo	ALL=NOPASSWD:ALL/g' -i /etc/sudoers

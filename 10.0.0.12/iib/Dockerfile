@@ -7,11 +7,11 @@
 
 FROM ubuntu:16.04
 
-LABEL maintainer "Ashish Nema <ashish.nema@nl.abnamro.com>"
+MAINTAINER ashish.nema@nl.abnamro.com
 
 LABEL "ProductID"="447aefb5fd1342d5b893f3934dfded73" \
       "ProductName"="IBM Integration Bus" \
-      "ProductVersion"="10.0.0.11"
+      "ProductVersion"="10.0.0.12"
 
 # Install curl
 RUN apt-get update && \
@@ -22,15 +22,16 @@ RUN apt-get update && \
 # Install IIB V10 Developer edition
 RUN mkdir /opt/ibm && \
     curl http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/integration/10.0.0.12-IIB-LINUX64-DEVELOPER.tar.gz \
-    | tar zx --exclude iib-10.0.0.11/tools --directory /opt/ibm && \
+    | tar zx --exclude iib-10.0.0.12/tools --directory /opt/ibm && \
     /opt/ibm/iib-10.0.0.12/iib make registry global accept license silently
 
 # Configure system
+COPY kernel_settings.sh /tmp/
 RUN echo "IIB_10:" > /etc/debian_chroot  && \
     touch /var/log/syslog && \
-    chown syslog:adm /var/log/syslog
-
-
+    chown syslog:adm /var/log/syslog && \
+    chmod +x /tmp/kernel_settings.sh;sync && \
+    /tmp/kernel_settings.sh
 
 # Create user to run as
 RUN useradd --create-home --home-dir /home/iibuser -G mqbrkrs,sudo iibuser && \
@@ -57,4 +58,4 @@ EXPOSE 4414 7800
 USER iibuser
 
 # Set entrypoint to run management script
-ENTRYPOINT ["iib_manage.sh"]    
+ENTRYPOINT ["iib_manage.sh"]
